@@ -60,4 +60,4 @@ When click close the application, go to tray instead of termination. If want ter
 ## Demo
 
 ![](https://micro-artwork.github.io/images/projects/xi2ds/demo.gif)
-https://www.youtube.com/watch?v=S71HYJSr0LA
+https://youtu.be/bRIGUEyhO0w
