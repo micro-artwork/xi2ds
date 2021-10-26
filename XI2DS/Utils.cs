@@ -127,11 +127,13 @@ namespace XI2DS
 
             if (gamepad.LeftTrigger > Gamepad.TriggerThreshold)
             {
+                report.SetButtons(DualShock4Buttons.TriggerLeft);
                 report.SetAxis(DualShock4Axes.LeftTrigger, gamepad.LeftTrigger);
             }
 
             if (gamepad.RightTrigger > Gamepad.TriggerThreshold)
             {
+                report.SetButtons(DualShock4Buttons.TriggerRight);
                 report.SetAxis(DualShock4Axes.RightTrigger, gamepad.RightTrigger);
             }
 
