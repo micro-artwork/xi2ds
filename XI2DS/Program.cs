@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -14,16 +15,28 @@ namespace XI2DS
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            try
+            bool excutable;            
+            Mutex mutex = new Mutex(true, "XI2DS", out excutable);
+            if (excutable)
             {
-                Application.Run(new FormMain());
-            } catch (Exception e)
-            {
-                Application.Exit();
+                
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                try
+                {
+                    Application.Run(new FormMain());
+                }
+                catch (Exception e)
+                {
+                    Application.Exit();
+                }
+                mutex.ReleaseMutex();
             }
-            
+            else
+            {
+                MessageBox.Show("XI2DS is running already");
+                return;
+            }
         }
     }
 }
