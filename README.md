@@ -64,3 +64,5 @@ When click close button on application, go to tray without termination. If want 
 ![](https://micro-artwork.github.io/images/projects/xi2ds/demo.gif)
 
 https://youtu.be/bRIGUEyhO0w
+
+Note: You can check controller state on https://gamepad-tester.com/
