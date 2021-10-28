@@ -18,9 +18,11 @@ XC and DS4 have near similar function buttons (e.g. D-Pads, start(option), analo
 
 XC's select(or View) button is not mapped and used only for combinations.
 
-|Combinations|Select + Letf Bumper|Select + Right Bumper|Select + Start|
-|-|-|-|-|
-|DS4 Mapping|Share|Touchpad Press|PS Home|
+|Combinations|DS4 Mapping|
+|-|-|
+|Select + Letf Bumper|Share|
+|Select + Right Bumper|Touchpad Press|
+|Select + Start|PS Home|
 
 
 ### Support Force Feedback
@@ -51,9 +53,9 @@ It is very simple to use!
 
 ![](https://micro-artwork.github.io/images/projects/xi2ds/xi2ds_4.png)
 
-5. Play games on PSRP
+5. Play
 
-When click close the application, go to tray instead of termination. If want termination compeletly, use exit on menu.
+When click close button on application, go to tray without termination. If want termination completely, use Exit on menu.
 
 ![](https://micro-artwork.github.io/images/projects/xi2ds/xi2ds_6.png)
 
