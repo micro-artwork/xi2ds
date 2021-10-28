@@ -20,7 +20,7 @@ XC's select(or View) button is not mapped and used only for combinations.
 
 |Combinations|DS4 Mapping|
 |-|-|
-|Select + Letf Bumper|Share|
+|Select + Left Bumper|Share|
 |Select + Right Bumper|Touchpad Press|
 |Select + Start|PS Home|
 
@@ -62,4 +62,5 @@ When click close button on application, go to tray without termination. If want 
 ## Demo
 
 ![](https://micro-artwork.github.io/images/projects/xi2ds/demo.gif)
+
 https://youtu.be/bRIGUEyhO0w
