@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
-using SharpDX.XInput;
 using Newtonsoft.Json;
 using System.Drawing;
+using Vortice.XInput;
 
 namespace XI2DS
 {

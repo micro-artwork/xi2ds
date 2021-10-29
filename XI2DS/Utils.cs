@@ -1,60 +1,60 @@
 ﻿using System;
 using System.Text;
 using System.Collections.Generic;
-using SharpDX.XInput;
 using Nefarius.ViGEm.Client.Targets.DualShock4;
+using Vortice.XInput;
 
 namespace XI2DS
 {
     static class Utils
     {
-        private static Dictionary<GamepadButtonFlags, string> XInputButtonDict =
-            new Dictionary<GamepadButtonFlags, string>()
+        private static Dictionary<GamepadButtons, string> XInputButtonDict =
+            new Dictionary<GamepadButtons, string>()
             {
-                { GamepadButtonFlags.DPadUp, "Up" },
-                { GamepadButtonFlags.DPadDown, "Down" },
-                { GamepadButtonFlags.DPadLeft, "Left" },
-                { GamepadButtonFlags.DPadRight, "Right" },
-                { GamepadButtonFlags.Start, "Start" },
-                { GamepadButtonFlags.Back, "Back" },
-                { GamepadButtonFlags.LeftThumb, "LS" },
-                { GamepadButtonFlags.RightThumb, "RS" },
-                { GamepadButtonFlags.LeftShoulder, "LB" },
-                { GamepadButtonFlags.RightShoulder, "RB" },
-                { GamepadButtonFlags.A, "A" },
-                { GamepadButtonFlags.B, "B" },
-                { GamepadButtonFlags.X, "X" },
-                { GamepadButtonFlags.Y, "Y" }
+                { GamepadButtons.DPadUp, "Up" },
+                { GamepadButtons.DPadDown, "Down" },
+                { GamepadButtons.DPadLeft, "Left" },
+                { GamepadButtons.DPadRight, "Right" },
+                { GamepadButtons.Start, "Start" },
+                { GamepadButtons.Back, "Back" },
+                { GamepadButtons.LeftThumb, "LS" },
+                { GamepadButtons.RightThumb, "RS" },
+                { GamepadButtons.LeftShoulder, "LB" },
+                { GamepadButtons.RightShoulder, "RB" },
+                { GamepadButtons.A, "A" },
+                { GamepadButtons.B, "B" },
+                { GamepadButtons.X, "X" },
+                { GamepadButtons.Y, "Y" }
         };
 
 
-        public static Dictionary<GamepadButtonFlags, DualShock4Button> ButtonFlags =
-            new Dictionary<GamepadButtonFlags, DualShock4Button>()
+        public static Dictionary<GamepadButtons, DualShock4Button> ButtonFlags =
+            new Dictionary<GamepadButtons, DualShock4Button>()
             {
-                { GamepadButtonFlags.Start, DualShock4Button.Options },
+                { GamepadButtons.Start, DualShock4Button.Options },
 
                 // back button is not used independently
-                //{ GamepadButtonFlags.Back, DualShock4Buttons.Share },
+                //{ GamepadButtons.Back, DualShock4Buttons.Share },
 
-                { GamepadButtonFlags.LeftThumb, DualShock4Button.ThumbLeft },
-                { GamepadButtonFlags.RightThumb, DualShock4Button.ThumbRight},
+                { GamepadButtons.LeftThumb, DualShock4Button.ThumbLeft },
+                { GamepadButtons.RightThumb, DualShock4Button.ThumbRight},
 
-                { GamepadButtonFlags.LeftShoulder, DualShock4Button.ShoulderLeft },
-                { GamepadButtonFlags.RightShoulder, DualShock4Button.ShoulderRight },
+                { GamepadButtons.LeftShoulder, DualShock4Button.ShoulderLeft },
+                { GamepadButtons.RightShoulder, DualShock4Button.ShoulderRight },
 
-                { GamepadButtonFlags.A, DualShock4Button.Cross },
-                { GamepadButtonFlags.B, DualShock4Button.Circle },
-                { GamepadButtonFlags.X, DualShock4Button.Square },
-                { GamepadButtonFlags.Y, DualShock4Button.Triangle }
+                { GamepadButtons.A, DualShock4Button.Cross },
+                { GamepadButtons.B, DualShock4Button.Circle },
+                { GamepadButtons.X, DualShock4Button.Square },
+                { GamepadButtons.Y, DualShock4Button.Triangle }
             };
 
-        public static Dictionary<GamepadButtonFlags, DualShock4DPadDirection> DPadFlags =
-            new Dictionary<GamepadButtonFlags, DualShock4DPadDirection>()
+        public static Dictionary<GamepadButtons, DualShock4DPadDirection> DPadFlags =
+            new Dictionary<GamepadButtons, DualShock4DPadDirection>()
             {
-               { GamepadButtonFlags.DPadUp, DualShock4DPadDirection.North },
-               { GamepadButtonFlags.DPadDown, DualShock4DPadDirection.South },
-               { GamepadButtonFlags.DPadLeft, DualShock4DPadDirection.West },
-               { GamepadButtonFlags.DPadRight, DualShock4DPadDirection.East }
+               { GamepadButtons.DPadUp, DualShock4DPadDirection.North },
+               { GamepadButtons.DPadDown, DualShock4DPadDirection.South },
+               { GamepadButtons.DPadLeft, DualShock4DPadDirection.West },
+               { GamepadButtons.DPadRight, DualShock4DPadDirection.East }
             };
 
 
@@ -66,9 +66,9 @@ namespace XI2DS
             //string analogFormat = "{0}:{1:F4} ";
 
             Gamepad gamepad = state.Gamepad;
-            GamepadButtonFlags buttons = gamepad.Buttons;
+            GamepadButtons buttons = gamepad.Buttons;
 
-            foreach (KeyValuePair<GamepadButtonFlags, string> item in XInputButtonDict)
+            foreach (KeyValuePair<GamepadButtons, string> item in XInputButtonDict)
             {
                 if (buttons.HasFlag(item.Key)) sb.AppendFormat(format, item.Value);
             }
@@ -123,11 +123,11 @@ namespace XI2DS
             float[] data = new float[20];
 
             Gamepad gamepad = state.Gamepad;
-            GamepadButtonFlags buttons = gamepad.Buttons;
+            GamepadButtons buttons = gamepad.Buttons;
 
             int index = 0;
 
-            foreach (KeyValuePair<GamepadButtonFlags, string> item in XInputButtonDict)
+            foreach (KeyValuePair<GamepadButtons, string> item in XInputButtonDict)
             {
                 if (buttons.HasFlag(item.Key)) data[index++] = 1.0f;
                 else data[index++] = 0f;
