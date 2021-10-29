@@ -10,9 +10,8 @@ namespace XI2DS.Xinput
         readonly static int INPUT_STATE_POLLING_RATE = 100;
         readonly int INPUT_STATE_SLEEP_TIME = 1000 / INPUT_STATE_POLLING_RATE;
 
-        IXInputStautsReceiver statusReceiver;
-        IXInputStateReceiver stateReceiver;
-
+        IXInputEventReceiver xInputEventReceiver;
+        
         Task stateTask;
         bool stateTaskFlag = false;
         bool reportEnabled = false;
@@ -20,12 +19,11 @@ namespace XI2DS.Xinput
         public int UserIndex { get; }
                 
 
-        public XInputController(int userIndex, IXInputStautsReceiver statusReceiver, IXInputStateReceiver stateReceiver)
+        public XInputController(int userIndex, IXInputEventReceiver xInputEventReceiver)
         {
             //if (userIndex == SharpDX.XInput.UserIndex.Any) throw new Exception("Not allowed user index type");
             this.UserIndex = userIndex;
-            this.statusReceiver = statusReceiver;
-            this.stateReceiver = stateReceiver;
+            this.xInputEventReceiver = xInputEventReceiver;
                         
             StartScan();
         }
@@ -41,15 +39,21 @@ namespace XI2DS.Xinput
 
         public void StartScan()
         {
-            this.stateTaskFlag = true;
-            this.stateTask = new Task(() => ScanState());
-            this.stateTask.Start();
+            if (!this.stateTaskFlag)
+            {
+                this.stateTaskFlag = true;
+                this.stateTask = new Task(() => ScanState());
+                this.stateTask.Start();
+            }
         }
 
         public void StopScan()
         {
-            this.stateTaskFlag = false;
-            this.stateTask.Wait();
+            if (this.stateTaskFlag)
+            {
+                this.stateTaskFlag = false;
+                this.stateTask.Wait();
+            }            
         }
 
         public void StartReport()
@@ -74,14 +78,14 @@ namespace XI2DS.Xinput
                 
                 if (oldState.PacketNumber != newState.PacketNumber && this.reportEnabled && isSuccess)
                 {
-                    stateReceiver.OnStateUpdated(UserIndex, newState);
+                    xInputEventReceiver.OnStateUpdated(UserIndex, newState);
                 }
 
                 if (count++ > INPUT_STATE_POLLING_RATE / 2) 
                 {
                     count = 0;
                     BatteryInformation info = XInput.GetBatteryInformation(UserIndex, BatteryDeviceType.Gamepad);
-                    statusReceiver.OnStatusUpdated(this.UserIndex, isSuccess, info);
+                    xInputEventReceiver.OnStatusUpdated(this.UserIndex, isSuccess, info);
                 }                               
                 
                 oldState = newState;

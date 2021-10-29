@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using Nefarius.ViGEm.Client;
 using Nefarius.ViGEm.Client.Exceptions;
-//using SharpDX.XInput;
 using Vortice.XInput;
 using XI2DS.Xinput;
 using XI2DS.DualShock4;
@@ -12,7 +11,7 @@ using System.Reflection;
 
 namespace XI2DS
 {
-    public partial class FormMain : Form, IXInputStautsReceiver, IXInputStateReceiver, IFeedBackReceiver
+    public partial class FormMain : Form, IXInputEventReceiver, IFeedBackReceiver
     {
         readonly ViGEmClient client;
         readonly XInputController[] xInputControllers;
@@ -44,10 +43,10 @@ namespace XI2DS
             };
 
             xInputControllers = new[] {
-                new XInputController(0, this, this),
-                new XInputController(1, this, this),
-                new XInputController(2, this, this),
-                new XInputController(3, this, this)
+                new XInputController(0, this),
+                new XInputController(1, this),
+                new XInputController(2, this),
+                new XInputController(3, this)
             };
                         
             notifyIcon.ContextMenuStrip = new ContextMenuStrip();
@@ -223,16 +222,11 @@ namespace XI2DS
 
         public void OnStateUpdated(int userIndex, State state)
         {
-            //var report = Utils.XInputStateToDS4Report(state);
-            //ds4Controllers[userIndex].SendReport(report);
-
-            
             ds4Controllers[userIndex].SubmitReport(state);
-
-            //if (formTest.Visible)
-            //{
-            //    formTest.ShowState(userIndex, state);
-            //}
+            if (formTest.Visible)
+            {
+                formTest.ShowState(userIndex, state);
+            }
         }
 
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
