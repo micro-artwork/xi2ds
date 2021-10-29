@@ -8,7 +8,10 @@ Unfortunately, for some unknown reason, the touchpad press may not work in some 
 
 It was developed for personal use, so I haven't been able to test many cases.  After hundreds of hours of play, no major problems were found, but if find problems, I will try to fix bugs.
 
-
+## Requirements for running
+* .NET 5.0 runtime or Higher (https://dotnet.microsoft.com/download/dotnet/5.0)
+* Windows 10
+* ViGEmBus 1.17.333 (https://github.com/ViGEm/ViGEmBus/releases/tag/setup-v1.17.333)
 
 ## Features
 
