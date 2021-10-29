@@ -114,6 +114,7 @@
             // 
             // imageListBattery
             // 
+            this.imageListBattery.ColorDepth = System.Windows.Forms.ColorDepth.Depth24Bit;
             this.imageListBattery.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListBattery.ImageStream")));
             this.imageListBattery.TransparentColor = System.Drawing.Color.Transparent;
             this.imageListBattery.Images.SetKeyName(0, "battery_empty.png");
@@ -128,7 +129,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(39, 42);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(69, 12);
+            this.label1.Size = new System.Drawing.Size(71, 15);
             this.label1.TabIndex = 3;
             this.label1.Text = "Controller 1";
             // 
@@ -137,7 +138,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(39, 71);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(69, 12);
+            this.label2.Size = new System.Drawing.Size(71, 15);
             this.label2.TabIndex = 3;
             this.label2.Text = "Controller 2";
             // 
@@ -146,7 +147,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(39, 100);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(69, 12);
+            this.label3.Size = new System.Drawing.Size(71, 15);
             this.label3.TabIndex = 3;
             this.label3.Text = "Controller 3";
             // 
@@ -155,7 +156,7 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(39, 129);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(69, 12);
+            this.label4.Size = new System.Drawing.Size(71, 15);
             this.label4.TabIndex = 3;
             this.label4.Text = "Controller 4";
             // 
@@ -185,14 +186,14 @@
             // inputTestToolStripMenuItem
             // 
             this.inputTestToolStripMenuItem.Name = "inputTestToolStripMenuItem";
-            this.inputTestToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.inputTestToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.inputTestToolStripMenuItem.Text = "Input Test";
             this.inputTestToolStripMenuItem.Click += new System.EventHandler(this.InputTestToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
             // 
