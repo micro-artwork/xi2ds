@@ -150,6 +150,8 @@ namespace XI2DS
         }
         private void ExitApplication()
         {
+            notifyIcon.Visible = false;
+
             foreach (DS4Controller controller in ds4Controllers)
             {
                 controller.Disconnect();

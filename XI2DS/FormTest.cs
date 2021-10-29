@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using Newtonsoft.Json;
 using System.Drawing;
 using Vortice.XInput;
 
@@ -8,14 +7,14 @@ namespace XI2DS
 {
     public partial class FormTest : Form
     {
-        private State[] oldStates;
+        private State[] stateArray;
         private bool formLoaded = false;        
 
         public FormTest()
         {
             InitializeComponent();
             
-            oldStates = new[]
+            stateArray = new[]
             {
                 new State(), new State(), new State(), new State()
             };
@@ -39,34 +38,28 @@ namespace XI2DS
         {   
             if (formLoaded)
             {
-                var oldState = oldStates[userIndex];
-                var oldJson = JsonConvert.SerializeObject(oldState);
+                var oldState = stateArray[userIndex];                
                 state.PacketNumber = 0;
-                var newJson = JsonConvert.SerializeObject(state);
-
-                if (oldJson != newJson)
-                {                        
-                    this.Invoke((MethodInvoker)delegate
+                this.Invoke((MethodInvoker)delegate
+                {
+                var stateStr = Utils.XInputStateToText(state);
+                    if (stateStr != "")
                     {
-                    var stateStr = Utils.XInputStateToText(state);
-                        if (stateStr != "")
-                        {
-                            var log = string.Format("Controller {0} - {1}" + Environment.NewLine, userIndex + 1, stateStr);
-                            this.uiTextLog.AppendText(log);
-                        }
+                        var log = string.Format("Controller {0} - {1}" + Environment.NewLine, userIndex + 1, stateStr);
+                        this.uiTextLog.AppendText(log);
+                    }
 
-                        var data = Utils.XInputStateToGridViewData(state);
-                        UpdateGridViewData(userIndex, data);
-                    });
-                    oldStates[userIndex] = state;
-                }
+                    var data = Utils.XInputStateToGridViewData(state);
+                    UpdateGridViewData(userIndex, data);
+                });
+                stateArray[userIndex] = state;
+                
             }
         }
 
 
         private void UpdateGridViewData(int rowIndex, float[] data)
         {
-
             for (int columnIndex = 0; columnIndex < data.Length; columnIndex++)
             {
                 dataGridViewState.Rows[rowIndex].Cells[columnIndex + 1].Value = data[columnIndex];
@@ -76,11 +69,9 @@ namespace XI2DS
                 } else {
                     dataGridViewState.Rows[rowIndex].Cells[columnIndex + 1].Style.BackColor = Color.White;
                 }
-
             }
             
         }
-
 
         private void FormLog_FormClosing(object sender, FormClosingEventArgs e)
         {
