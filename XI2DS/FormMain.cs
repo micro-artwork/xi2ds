@@ -4,14 +4,14 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using Nefarius.ViGEm.Client;
 using Nefarius.ViGEm.Client.Exceptions;
-using SharpDX.XInput;
+using Vortice.XInput;
 using XI2DS.Xinput;
 using XI2DS.DualShock4;
 using System.Reflection;
 
 namespace XI2DS
 {
-    public partial class FormMain : Form, ControllerStautsReceiver, XInputStateReceiver, FeedBackReceiver
+    public partial class FormMain : Form, IXInputEventReceiver, IFeedBackReceiver
     {
         readonly ViGEmClient client;
         readonly XInputController[] xInputControllers;
@@ -43,10 +43,10 @@ namespace XI2DS
             };
 
             xInputControllers = new[] {
-                new XInputController(UserIndex.One, this, this),
-                new XInputController(UserIndex.Two, this, this),
-                new XInputController(UserIndex.Three, this, this),
-                new XInputController(UserIndex.Four, this, this)
+                new XInputController(0, this),
+                new XInputController(1, this),
+                new XInputController(2, this),
+                new XInputController(3, this)
             };
                         
             notifyIcon.ContextMenuStrip = new ContextMenuStrip();
@@ -69,10 +69,10 @@ namespace XI2DS
             {
                 client = new ViGEmClient();
                 ds4Controllers = new[] {
-                    new DS4Controller(client, (int)UserIndex.One, this),
-                    new DS4Controller(client, (int)UserIndex.Two, this),
-                    new DS4Controller(client, (int)UserIndex.Three, this),
-                    new DS4Controller(client, (int)UserIndex.Four, this)
+                    new DS4Controller(client, 0, this),
+                    new DS4Controller(client, 1, this),
+                    new DS4Controller(client, 2, this),
+                    new DS4Controller(client, 3, this)
                 };
                 
             }
@@ -100,7 +100,7 @@ namespace XI2DS
                         return titleAttribute.Title;
                     }
                 }
-                return System.IO.Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
+                return "";
             }
         }
 
@@ -112,7 +112,7 @@ namespace XI2DS
 
         private Image GetBatteryImage(BatteryType type, BatteryLevel level)
         {
-            int index = 0;
+            int index;
             switch (type)
             {
                 case BatteryType.Alkaline:
@@ -150,6 +150,8 @@ namespace XI2DS
         }
         private void ExitApplication()
         {
+            notifyIcon.Visible = false;
+
             foreach (DS4Controller controller in ds4Controllers)
             {
                 controller.Disconnect();
@@ -174,12 +176,12 @@ namespace XI2DS
 
             if (ds4Controllers[userIndex].IsConnected)
             {
-                xInputControllers[userIndex].StopScan();
+                xInputControllers[userIndex].StopReport();
                 ds4Controllers[userIndex].Disconnect();
                 connectionButtons[userIndex].Text = "DS4 Connect";
             } else {
                 ds4Controllers[userIndex].Connect();
-                xInputControllers[userIndex].StartScan();
+                xInputControllers[userIndex].StartReport();
                 connectionButtons[userIndex].Text = "DS4 Disconnect";
             }
         }       
@@ -192,13 +194,13 @@ namespace XI2DS
 
         public void OnFeedBackReceived(int userIndex, byte smallMotor, byte largeMotor)
         {
-            Debug.WriteLine("{0}, {1}, {2}", userIndex, smallMotor, largeMotor);
+            //Debug.WriteLine("{0}, {1}, {2}", userIndex, smallMotor, largeMotor);
             xInputControllers[userIndex].Vibrate(smallMotor, largeMotor);
         }
 
         public void OnStatusUpdated(int userIndex, bool isConnected, BatteryInformation information)
-        {
-            Debug.WriteLine("{0}, {1}, {2}, {3}", userIndex, isConnected, information.BatteryType, information.BatteryLevel);
+        {            
+            //Debug.WriteLine("{0}, {1}, {2}, {3}", userIndex, isConnected, information.BatteryType, information.BatteryLevel);
             this.Invoke((MethodInvoker) delegate {
                 if (isConnected)
                 {
@@ -217,8 +219,7 @@ namespace XI2DS
 
         public void OnStateUpdated(int userIndex, State state)
         {
-            var report = Utils.XInputStateToDS4Report(state);
-            ds4Controllers[userIndex].SendReport(report);
+            ds4Controllers[userIndex].SubmitReport(state);
             if (formTest.Visible)
             {
                 formTest.ShowState(userIndex, state);

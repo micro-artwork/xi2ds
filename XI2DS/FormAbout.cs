@@ -53,7 +53,7 @@ namespace XI2DS
                         return titleAttribute.Title;
                     }
                 }
-                return System.IO.Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
+                return "";
             }
         }
 

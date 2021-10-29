@@ -38,12 +38,13 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBoxDescription.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.richTextBoxDescription.Cursor = System.Windows.Forms.Cursors.Default;
-            this.richTextBoxDescription.Font = new System.Drawing.Font("맑은 고딕", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.richTextBoxDescription.Location = new System.Drawing.Point(12, 12);
+            this.richTextBoxDescription.Font = new System.Drawing.Font("맑은 고딕", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.richTextBoxDescription.Location = new System.Drawing.Point(12, 15);
+            this.richTextBoxDescription.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.richTextBoxDescription.Name = "richTextBoxDescription";
             this.richTextBoxDescription.ReadOnly = true;
             this.richTextBoxDescription.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.richTextBoxDescription.Size = new System.Drawing.Size(460, 537);
+            this.richTextBoxDescription.Size = new System.Drawing.Size(460, 331);
             this.richTextBoxDescription.TabIndex = 2;
             this.richTextBoxDescription.TabStop = false;
             this.richTextBoxDescription.Text = "";
@@ -53,11 +54,12 @@
             // 
             // FormAbout
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(484, 561);
+            this.ClientSize = new System.Drawing.Size(484, 361);
             this.Controls.Add(this.richTextBoxDescription);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormAbout";
