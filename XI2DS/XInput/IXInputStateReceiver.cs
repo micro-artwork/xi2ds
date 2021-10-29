@@ -1,11 +1,8 @@
-﻿using System;
-
-
-using SharpDX.XInput;
+﻿using Vortice.XInput;
 
 namespace XI2DS.Xinput
 {
-    public interface XInputStateReceiver
+    public interface IXInputStateReceiver
     {
         void OnStateUpdated(int userIndex, State state);
     }

@@ -1,175 +1,101 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Threading;
-using SharpDX.XInput;
-
+using Vortice.XInput;
 
 namespace XI2DS.Xinput
 {
     public class XInputController
-    {
-        readonly static int CONT_STATUS_POLLING_RATE = 2;
+    {        
         readonly static int INPUT_STATE_POLLING_RATE = 100;
-
-        readonly int CONT_STATUS_SLEEP_TIME = 1000 / CONT_STATUS_POLLING_RATE;
         readonly int INPUT_STATE_SLEEP_TIME = 1000 / INPUT_STATE_POLLING_RATE;
 
-        ControllerStautsReceiver statusReceiver;
-        Task statusTask;
-        bool statusTaskFlag = false;
+        IXInputStautsReceiver statusReceiver;
+        IXInputStateReceiver stateReceiver;
 
-        XInputStateReceiver stateReceiver;
         Task stateTask;
         bool stateTaskFlag = false;
-
-        public Controller Controller { get; }
+        bool reportEnabled = false;
 
         public int UserIndex { get; }
                 
 
-        public XInputController(UserIndex userIndex, ControllerStautsReceiver statusReceiver, XInputStateReceiver stateReceiver)
+        public XInputController(int userIndex, IXInputStautsReceiver statusReceiver, IXInputStateReceiver stateReceiver)
         {
-            if (userIndex == SharpDX.XInput.UserIndex.Any) throw new Exception("Not allowed user index type");
-            this.UserIndex = (int)userIndex;
-            this.Controller = new Controller(userIndex);
-            SetControllerStatusReceiver(statusReceiver);
-            SetStateReceiver(stateReceiver);
-        }        
-
-        private void SetControllerStatusReceiver(ControllerStautsReceiver receiver)
-        {
-            this.statusReceiver = receiver;
-            this.statusTaskFlag = true;
-            this.statusTask = new Task(() => ScanControllerStatus());
-            this.statusTask.Start();
-        }
-
-        private void SetStateReceiver(XInputStateReceiver receiver)
-        {
-            this.stateReceiver = receiver;
+            //if (userIndex == SharpDX.XInput.UserIndex.Any) throw new Exception("Not allowed user index type");
+            this.UserIndex = userIndex;
+            this.statusReceiver = statusReceiver;
+            this.stateReceiver = stateReceiver;
+                        
+            StartScan();
         }
 
 
         public void Vibrate(byte smallMotor, byte largeMotor)
         {
-            if (this.Controller.IsConnected)
-            {
-                Vibration vibration = new Vibration();
-                vibration.LeftMotorSpeed = Convert.ToUInt16(largeMotor * 256);
-                vibration.RightMotorSpeed = Convert.ToUInt16(smallMotor * 256);
-                this.Controller.SetVibration(vibration);
-            }
+            Vibration vibration = new Vibration();
+            vibration.LeftMotorSpeed = Convert.ToUInt16(largeMotor * 256);
+            vibration.RightMotorSpeed = Convert.ToUInt16(smallMotor * 256);
+            XInput.SetVibration(UserIndex, vibration);
         }
 
-        public bool StartScan()
+        public void StartScan()
         {
-            if (!stateTaskFlag && this.Controller.IsConnected)
-            {
-                this.stateTaskFlag = true;
-                this.stateTask = new Task(() => ScanState());
-                this.stateTask.Start();
-
-                return true;
-            }
-
-            return false;
-
+            this.stateTaskFlag = true;
+            this.stateTask = new Task(() => ScanState());
+            this.stateTask.Start();
         }
 
-        public bool StopScan()
+        public void StopScan()
         {
-            if (stateTaskFlag)
-            {
-                this.stateTaskFlag = false;
-                this.stateTask.Wait();
+            this.stateTaskFlag = false;
+            this.stateTask.Wait();
+        }
 
-                return true;
-            }
+        public void StartReport()
+        {
+            this.reportEnabled = true;
+        }
 
-            return false;
+        public void StopReport()
+        {
+            this.reportEnabled = false;
         }
 
         private void ScanState()
-        {            
-            var oldState = this.Controller.GetState();
+        {
+            State oldState, newState;
+            int count = 0;
+            bool isSuccess = XInput.GetState(UserIndex, out oldState);
+
             while (this.stateTaskFlag)
             {
-                if (this.Controller.IsConnected)                
+                isSuccess = XInput.GetState(UserIndex, out newState);
+                
+                if (oldState.PacketNumber != newState.PacketNumber && this.reportEnabled && isSuccess)
                 {
-                    
-                    State newState;
-
-                    try
-                    {
-                        newState = this.Controller.GetState();
-                    }
-                    catch (Exception e)
-                    {
-                        this.stateTaskFlag = false;
-                        break;
-                    }
-
-                    if (oldState.PacketNumber != newState.PacketNumber)
-                    {
-                        stateReceiver.OnStateUpdated(UserIndex, newState);
-                    }
-                    oldState = newState;
-                } else {
-                    this.stateTaskFlag = false;
-                    break;
+                    stateReceiver.OnStateUpdated(UserIndex, newState);
                 }
 
-                Thread.Sleep(INPUT_STATE_SLEEP_TIME);
+                if (count++ > INPUT_STATE_POLLING_RATE / 2) 
+                {
+                    count = 0;
+                    BatteryInformation info = XInput.GetBatteryInformation(UserIndex, BatteryDeviceType.Gamepad);
+                    statusReceiver.OnStatusUpdated(this.UserIndex, isSuccess, info);
+                }                               
+                
+                oldState = newState;
 
+                Thread.Sleep(INPUT_STATE_SLEEP_TIME);
             }
             
         }
 
-        private void ScanControllerStatus()
+        public struct XInputStatus
         {
-            var information = new BatteryInformation();
-            information.BatteryType = BatteryType.Disconnected;
-            information.BatteryLevel = BatteryLevel.Empty;
-            var oldStatus = new Status(false, information);
-
-            while (this.statusTaskFlag)
-            {   
-                bool isConnected;
-                BatteryInformation batteryInformation;
-
-                if (this.Controller.IsConnected)
-                {
-                    isConnected = true;
-                    batteryInformation = Controller.GetBatteryInformation(BatteryDeviceType.Gamepad);
-                }
-                else
-                {
-                    isConnected = false;
-                    batteryInformation = new BatteryInformation();
-                    batteryInformation.BatteryType = BatteryType.Disconnected;
-                    batteryInformation.BatteryLevel = BatteryLevel.Empty;
-                }
-
-                Status newStatus = new Status(isConnected, batteryInformation);
-
-
-                if (oldStatus.IsConnected != newStatus.IsConnected || 
-                    oldStatus.BatteryInformation.BatteryType != newStatus.BatteryInformation.BatteryType ||
-                    oldStatus.BatteryInformation.BatteryLevel != newStatus.BatteryInformation.BatteryLevel)
-                {
-                    statusReceiver.OnStatusUpdated(this.UserIndex, newStatus.IsConnected, newStatus.BatteryInformation);                    
-                }
-
-                oldStatus = newStatus;
-                Thread.Sleep(CONT_STATUS_SLEEP_TIME);
-            }
-        }
-
-        public struct Status
-        {
-            public Status(bool isConnected, BatteryInformation information)
+            public XInputStatus(BatteryInformation information)
             {
-                IsConnected = isConnected;
+                IsConnected = information.BatteryLevel != BatteryLevel.Empty;
                 BatteryInformation = information;
             }
 
