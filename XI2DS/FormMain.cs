@@ -100,7 +100,7 @@ namespace XI2DS
                         return titleAttribute.Title;
                     }
                 }
-                return System.IO.Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
+                return "";
             }
         }
 
@@ -112,7 +112,7 @@ namespace XI2DS
 
         private Image GetBatteryImage(BatteryType type, BatteryLevel level)
         {
-            int index = 0;
+            int index;
             switch (type)
             {
                 case BatteryType.Alkaline:
@@ -192,18 +192,13 @@ namespace XI2DS
 
         public void OnFeedBackReceived(int userIndex, byte smallMotor, byte largeMotor)
         {
-            Debug.WriteLine("{0}, {1}, {2}", userIndex, smallMotor, largeMotor);
+            //Debug.WriteLine("{0}, {1}, {2}", userIndex, smallMotor, largeMotor);
             xInputControllers[userIndex].Vibrate(smallMotor, largeMotor);
         }
 
         public void OnStatusUpdated(int userIndex, bool isConnected, BatteryInformation information)
-        {
-            if (userIndex == 0)
-            {
-                Debug.WriteLine("{0}, {1}, {2}, {3}", userIndex, isConnected, information.BatteryType, information.BatteryLevel);
-            }
-            
-
+        {            
+            //Debug.WriteLine("{0}, {1}, {2}, {3}", userIndex, isConnected, information.BatteryType, information.BatteryLevel);
             this.Invoke((MethodInvoker) delegate {
                 if (isConnected)
                 {

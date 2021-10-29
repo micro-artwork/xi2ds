@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using Nefarius.ViGEm.Client;
 using Nefarius.ViGEm.Client.Targets;
 using Nefarius.ViGEm.Client.Targets.DualShock4;
-//using SharpDX.XInput;
 using Vortice.XInput;
 
 namespace XI2DS.DualShock4
 {
-
     public class DS4Controller
     {
 
@@ -42,13 +40,14 @@ namespace XI2DS.DualShock4
 
 
         public IDualShock4Controller Controller { get; }
+              
 
         public int UserIndex { get; }
 
         public bool IsConnected = false;
 
         IFeedBackReceiver feedBackReceiver;
-
+        
         public DS4Controller(ViGEmClient client, int userIndex, IFeedBackReceiver feedBackReceiver)
         {
             if (userIndex >= 4 && userIndex < 0)
@@ -180,6 +179,7 @@ namespace XI2DS.DualShock4
                 Controller.SetSliderValue(DualShock4Slider.RightTrigger, gamepad.RightTrigger);                
      
                 this.Controller.SubmitReport();
+
             }
         }
     }

@@ -18,8 +18,7 @@ namespace XI2DS
             bool excutable;            
             Mutex mutex = new Mutex(true, "XI2DS", out excutable);
             if (excutable)
-            {
-                
+            {                
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 try
@@ -27,7 +26,7 @@ namespace XI2DS
                     Application.Run(new FormMain());
                 }
                 catch (Exception e)
-                {
+                {                    
                     Application.Exit();
                 }
                 mutex.ReleaseMutex();
