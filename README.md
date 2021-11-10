@@ -8,9 +8,10 @@ Unfortunately, for some unknown reason, the touchpad press may not work in some 
 
 It was developed for personal use, so I haven't been able to test many cases.  After hundreds of hours of play, no major problems were found, but if find problems, I will try to fix bugs.
 
-## Requirements for running
+## Requirements for Running
 * .NET 5.0 runtime or Higher (https://dotnet.microsoft.com/download/dotnet/5.0)
-* Windows 10
+* Windows 10 or Higher
+* PS Remote Play PC (PS4/PS5)
 * ViGEmBus 1.17.333 (https://github.com/ViGEm/ViGEmBus/releases/tag/setup-v1.17.333)
 
 ## Features
@@ -35,7 +36,7 @@ If play a game that supports force feedback, XC can be vibrated.
 
 ### Indicate XC Battery(or Connection) Status
 
-Display XC's battery level(wireless only) or wired status. Additionally, The battery level is not detailed, it will be displayed as mid for most of time. If indicate low, need to charging or replacing. And if connect a controller, will not diaplay status immediately. After any buttons input, it will be displayed.
+Display XC's battery level(wireless only) or wired status. Additionally, The battery level is not detailed, it will be displayed as mid for most of time. If indicate low, need to charging or replacing. And if connect a controller, may not diaplay status immediately. When any buttons are pressed at least once, it will be displayed.
 
 
 
