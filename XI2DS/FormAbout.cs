@@ -27,7 +27,7 @@ namespace XI2DS
             this.textBoxDescription.Text = AssemblyDescription;
             */
         }
-             
+
 
         private void RichTextBox_HideCaret(object sender, EventArgs e)
         {
@@ -37,13 +37,26 @@ namespace XI2DS
 
         private void richTextBoxDescription_LinkClicked(object sender, LinkClickedEventArgs e)
         {
-            Process.Start(e.LinkText);
+            //Process.Start(e.LinkText);
+            try
+            {                
+                Process process = new Process();
+                process.StartInfo.UseShellExecute = true;
+                process.StartInfo.FileName = e.LinkText;
+                process.Start();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
         }
 
         #region 어셈블리 특성 접근자
 
-        public string AssemblyTitle {
-            get {
+        public string AssemblyTitle
+        {
+            get
+            {
                 object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
                 if (attributes.Length > 0)
                 {
@@ -57,14 +70,18 @@ namespace XI2DS
             }
         }
 
-        public string AssemblyVersion {
-            get {
+        public string AssemblyVersion
+        {
+            get
+            {
                 return Assembly.GetExecutingAssembly().GetName().Version.ToString();
             }
         }
 
-        public string AssemblyDescription {
-            get {
+        public string AssemblyDescription
+        {
+            get
+            {
                 object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false);
                 if (attributes.Length == 0)
                 {
@@ -74,8 +91,10 @@ namespace XI2DS
             }
         }
 
-        public string AssemblyProduct {
-            get {
+        public string AssemblyProduct
+        {
+            get
+            {
                 object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), false);
                 if (attributes.Length == 0)
                 {
@@ -85,8 +104,10 @@ namespace XI2DS
             }
         }
 
-        public string AssemblyCopyright {
-            get {
+        public string AssemblyCopyright
+        {
+            get
+            {
                 object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
                 if (attributes.Length == 0)
                 {
@@ -96,8 +117,10 @@ namespace XI2DS
             }
         }
 
-        public string AssemblyCompany {
-            get {
+        public string AssemblyCompany
+        {
+            get
+            {
                 object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCompanyAttribute), false);
                 if (attributes.Length == 0)
                 {
