@@ -83,7 +83,17 @@ namespace XI2DS
                     "Driver Not Found",
                     MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.OK)
                 {
-                    Process.Start("https://github.com/ViGEm/ViGEmBus/releases");
+                    try
+                    {
+                        Process process = new Process();
+                        process.StartInfo.UseShellExecute = true;
+                        process.StartInfo.FileName = "https://github.com/ViGEm/ViGEmBus/releases";
+                        process.Start();
+                    }
+                    catch
+                    {
+                        throw;
+                    }
                 }
                 throw e;
             }
