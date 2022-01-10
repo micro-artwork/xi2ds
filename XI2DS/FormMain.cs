@@ -18,7 +18,7 @@ namespace XI2DS
         readonly DS4Controller[] ds4Controllers;
         readonly Button[] connectionButtons;
         readonly PictureBox[] batteryIndicators;
-        readonly PictureBox[] connectionIndicators;        
+        readonly PictureBox[] connectionIndicators;
         readonly FormTest formTest = new FormTest();
 
         public FormMain()
@@ -48,7 +48,7 @@ namespace XI2DS
                 new XInputController(2, this),
                 new XInputController(3, this)
             };
-                        
+
             notifyIcon.ContextMenuStrip = new ContextMenuStrip();
             notifyIcon.ContextMenuStrip.Items.Add("Show").Click += (object sender, EventArgs e) =>
             {
@@ -64,7 +64,7 @@ namespace XI2DS
             {
                 ExitApplication();
             };
-            
+
             try
             {
                 client = new ViGEmClient();
@@ -74,12 +74,12 @@ namespace XI2DS
                     new DS4Controller(client, 2, this),
                     new DS4Controller(client, 3, this)
                 };
-                
+
             }
             catch (VigemBusNotFoundException e)
-            {                
+            {
                 if (MessageBox.Show("ViGEm bus driver is not found. Please check to install driver. " +
-                    "Press OK button to go to driver download page.", 
+                    "Press OK button to go to driver download page.",
                     "Driver Not Found",
                     MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.OK)
                 {
@@ -89,8 +89,10 @@ namespace XI2DS
             }
         }
 
-        public string AssemblyTitle {
-            get {
+        public string AssemblyTitle
+        {
+            get
+            {
                 object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
                 if (attributes.Length > 0)
                 {
@@ -104,8 +106,10 @@ namespace XI2DS
             }
         }
 
-        public string AssemblyVersion {
-            get {
+        public string AssemblyVersion
+        {
+            get
+            {
                 return Assembly.GetExecutingAssembly().GetName().Version.ToString();
             }
         }
@@ -128,13 +132,13 @@ namespace XI2DS
                 case BatteryType.Unknown:
                     index = 4;
                     break;
-            }            
+            }
             return imageListBattery.Images[index];
         }
 
         private Image GetConnectionImage(bool isConnected)
         {
-            return isConnected ? Properties.Resources.controller_connected 
+            return isConnected ? Properties.Resources.controller_connected
                 : Properties.Resources.controller_not_connected;
         }
 
@@ -144,9 +148,9 @@ namespace XI2DS
             this.Visible = true;
         }
         private void HideApplication()
-        {            
+        {
             this.ShowInTaskbar = false;
-            this.Visible = false;            
+            this.Visible = false;
         }
         private void ExitApplication()
         {
@@ -161,7 +165,7 @@ namespace XI2DS
             {
                 controller.StopScan();
             }
-            
+
             client.Dispose();
 
             Application.ExitThread();
@@ -179,12 +183,14 @@ namespace XI2DS
                 xInputControllers[userIndex].StopReport();
                 ds4Controllers[userIndex].Disconnect();
                 connectionButtons[userIndex].Text = "DS4 Connect";
-            } else {
+            }
+            else
+            {
                 ds4Controllers[userIndex].Connect();
                 xInputControllers[userIndex].StartReport();
                 connectionButtons[userIndex].Text = "DS4 Disconnect";
             }
-        }       
+        }
 
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -199,22 +205,27 @@ namespace XI2DS
         }
 
         public void OnStatusUpdated(int userIndex, bool isConnected, BatteryInformation information)
-        {            
+        {
             //Debug.WriteLine("{0}, {1}, {2}, {3}", userIndex, isConnected, information.BatteryType, information.BatteryLevel);
-            this.Invoke((MethodInvoker) delegate {
-                if (isConnected)
+            if (this.InvokeRequired)
+            {
+                this.Invoke((MethodInvoker)delegate
                 {
-                    connectionButtons[userIndex].Enabled = true;
-                }
-                else
-                {
-                    connectionButtons[userIndex].Text = "DS4 Connect";
-                    connectionButtons[userIndex].Enabled = false;
-                    ds4Controllers[userIndex].Disconnect();
-                }
-                batteryIndicators[userIndex].Image = GetBatteryImage(information.BatteryType, information.BatteryLevel);
-                connectionIndicators[userIndex].Image = GetConnectionImage(isConnected);
-            });
+                    if (isConnected)
+                    {
+                        connectionButtons[userIndex].Enabled = true;
+                    }
+                    else
+                    {
+                        connectionButtons[userIndex].Text = "DS4 Connect";
+                        connectionButtons[userIndex].Enabled = false;
+                        ds4Controllers[userIndex].Disconnect();
+                    }
+                    batteryIndicators[userIndex].Image = GetBatteryImage(information.BatteryType, information.BatteryLevel);
+                    connectionIndicators[userIndex].Image = GetConnectionImage(isConnected);
+                });
+            }
+
         }
 
         public void OnStateUpdated(int userIndex, State state)
