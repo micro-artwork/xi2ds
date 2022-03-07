@@ -53,6 +53,7 @@
             this.uiImageConnectionController1 = new System.Windows.Forms.PictureBox();
             this.uiImageBatteryInfoController1 = new System.Windows.Forms.PictureBox();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.timerBatteryCheck = new System.Windows.Forms.Timer(this.components);
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.uiImageBatteryInfoController4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.uiImageBatteryInfoController3)).BeginInit();
@@ -292,6 +293,12 @@
             this.notifyIcon.Visible = true;
             this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.NotifyIcon_MouseDoubleClick);
             // 
+            // timerBatteryCheck
+            // 
+            this.timerBatteryCheck.Enabled = true;
+            this.timerBatteryCheck.Interval = 1000;
+            this.timerBatteryCheck.Tick += new System.EventHandler(this.timerBatteryCheck_Tick);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -363,6 +370,7 @@
         private System.Windows.Forms.ToolStripMenuItem menuToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem inputTestToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.Timer timerBatteryCheck;
     }
 }
 

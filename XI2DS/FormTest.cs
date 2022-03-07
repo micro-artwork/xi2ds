@@ -7,19 +7,10 @@ namespace XI2DS
 {
     public partial class FormTest : Form
     {
-        private State[] stateArray;
-        private bool formLoaded = false;
-
         public FormTest()
         {
             InitializeComponent();
 
-            stateArray = new[]
-            {
-                new State(), new State(), new State(), new State()
-            };
-
-            //dataGridViewXInput.Rows.Add(4);
             for (int rowIndex = 0; rowIndex < 4; rowIndex++)
             {
                 dataGridViewState.Rows.Add();
@@ -31,53 +22,25 @@ namespace XI2DS
 
         private void FormLog_Load(object sender, EventArgs e)
         {
-            formLoaded = true;
+
         }
-
-        public void ShowState(int userIndex, State state)
-        {
-            if (formLoaded)
-            {
-                var oldState = stateArray[userIndex];
-                state.PacketNumber = 0;
-
-                if (this.InvokeRequired)
-                {
-                    this.Invoke((MethodInvoker)delegate
-                    {
-                        var stateStr = Utils.XInputStateToText(state);
-                        if (stateStr != "")
-                        {
-                            var log = string.Format("Controller {0} - {1}" + Environment.NewLine, userIndex + 1, stateStr);
-                            this.uiTextLog.AppendText(log);
-                        }
-
-                        var data = Utils.XInputStateToGridViewData(state);
-                        UpdateGridViewData(userIndex, data);
-                    });
-                }
-
-                stateArray[userIndex] = state;
-
-            }
-        }
-
 
         private void UpdateGridViewData(int rowIndex, float[] data)
         {
+            int columnStart = 2;
             for (int columnIndex = 0; columnIndex < data.Length; columnIndex++)
             {
-                dataGridViewState.Rows[rowIndex].Cells[columnIndex + 1].Value = data[columnIndex];
+                int gridIndex = columnIndex + columnStart;
+                dataGridViewState.Rows[rowIndex].Cells[gridIndex].Value = data[columnIndex];
                 if (data[columnIndex] != 0f)
                 {
-                    dataGridViewState.Rows[rowIndex].Cells[columnIndex + 1].Style.BackColor = Color.LawnGreen;
+                    dataGridViewState.Rows[rowIndex].Cells[gridIndex].Style.BackColor = Color.LawnGreen;
                 }
                 else
                 {
-                    dataGridViewState.Rows[rowIndex].Cells[columnIndex + 1].Style.BackColor = Color.White;
+                    dataGridViewState.Rows[rowIndex].Cells[gridIndex].Style.BackColor = Color.White;
                 }
             }
-
         }
 
         private void FormLog_FormClosing(object sender, FormClosingEventArgs e)
@@ -89,6 +52,37 @@ namespace XI2DS
         private void dataGridView_SelectionChanged(object sender, EventArgs e)
         {
             ((DataGridView)sender).ClearSelection();
+        }
+
+        private void timerFPS_Tick(object sender, EventArgs e)
+        {
+            for (int rowIndex = 0; rowIndex < 4; ++rowIndex)
+            {
+                dataGridViewState.Rows[rowIndex].Cells[1].Value = Utils.FPS[rowIndex];
+            }            
+        }
+
+        private void timerStateUpdate_Tick(object sender, EventArgs e)
+        {
+            for (int i = 0; i < 4; ++i)
+            {
+                var state = Utils.State[i];
+                var stateStr = Utils.XInputStateToText(state);
+                if (stateStr != "")
+                {
+                    var log = string.Format("Controller {0} - {1}" + Environment.NewLine, i + 1, stateStr);
+                    this.uiTextLog.AppendText(log);
+                }
+
+                var data = Utils.XInputStateToGridViewData(state);
+                UpdateGridViewData(i, data);
+            }
+        }
+
+        private void FormTest_VisibleChanged(object sender, EventArgs e)
+        {
+            timerFPS.Enabled = Visible;
+            timerStateUpdate.Enabled = Visible;
         }
     }
 }

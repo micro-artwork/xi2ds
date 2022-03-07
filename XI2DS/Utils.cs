@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using Nefarius.ViGEm.Client.Targets.DualShock4;
 using Vortice.XInput;
 
@@ -57,6 +58,9 @@ namespace XI2DS
                { GamepadButtons.DPadRight, DualShock4DPadDirection.East }
             };
 
+        public static ConcurrentDictionary<int, int> FPS = new ConcurrentDictionary<int, int>();
+        public static ConcurrentDictionary<int, bool> Connected = new ConcurrentDictionary<int, bool>();
+        public static ConcurrentDictionary<int, State> State = new ConcurrentDictionary<int, State>();
 
         public static string XInputStateToText(State state)
         {

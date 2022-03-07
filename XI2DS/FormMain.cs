@@ -74,10 +74,11 @@ namespace XI2DS
                     new DS4Controller(client, 2, this),
                     new DS4Controller(client, 3, this)
                 };
-
             }
             catch (VigemBusNotFoundException e)
             {
+                Console.WriteLine("exception occurred: {0}", e.Message);
+
                 if (MessageBox.Show("ViGEm bus driver is not found. Please check to install driver. " +
                     "Press OK button to go to driver download page.",
                     "Driver Not Found",
@@ -95,7 +96,8 @@ namespace XI2DS
                         throw;
                     }
                 }
-                throw e;
+
+                throw;
             }
         }
 
@@ -112,6 +114,7 @@ namespace XI2DS
                         return titleAttribute.Title;
                     }
                 }
+
                 return "";
             }
         }
@@ -180,7 +183,6 @@ namespace XI2DS
 
             Application.ExitThread();
             Application.Exit();
-
         }
 
         private void ButtonConnect_Click(object sender, EventArgs e)
@@ -217,34 +219,24 @@ namespace XI2DS
         public void OnStatusUpdated(int userIndex, bool isConnected, BatteryInformation information)
         {
             //Debug.WriteLine("{0}, {1}, {2}, {3}", userIndex, isConnected, information.BatteryType, information.BatteryLevel);
-            if (this.InvokeRequired)
+            if (isConnected)
             {
-                this.Invoke((MethodInvoker)delegate
-                {
-                    if (isConnected)
-                    {
-                        connectionButtons[userIndex].Enabled = true;
-                    }
-                    else
-                    {
-                        connectionButtons[userIndex].Text = "DS4 Connect";
-                        connectionButtons[userIndex].Enabled = false;
-                        ds4Controllers[userIndex].Disconnect();
-                    }
-                    batteryIndicators[userIndex].Image = GetBatteryImage(information.BatteryType, information.BatteryLevel);
-                    connectionIndicators[userIndex].Image = GetConnectionImage(isConnected);
-                });
+                connectionButtons[userIndex].Enabled = true;
+            }
+            else
+            {
+                connectionButtons[userIndex].Text = "DS4 Connect";
+                connectionButtons[userIndex].Enabled = false;
+                ds4Controllers[userIndex].Disconnect();
             }
 
+            batteryIndicators[userIndex].Image = GetBatteryImage(information.BatteryType, information.BatteryLevel);
+            connectionIndicators[userIndex].Image = GetConnectionImage(isConnected);
         }
 
         public void OnStateUpdated(int userIndex, State state)
         {
             ds4Controllers[userIndex].SubmitReport(state);
-            if (formTest.Visible)
-            {
-                formTest.ShowState(userIndex, state);
-            }
         }
 
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -275,5 +267,13 @@ namespace XI2DS
             ShowApplication();
         }
 
+        private void timerBatteryCheck_Tick(object sender, EventArgs e)
+        {
+            for (int i = 0; i < 4; ++i)
+            {
+                BatteryInformation batteryInfo = XInput.GetBatteryInformation(i, BatteryDeviceType.Gamepad);
+                OnStatusUpdated(i, Utils.Connected[i], batteryInfo);
+            }
+        }
     }
 }

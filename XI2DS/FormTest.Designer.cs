@@ -28,9 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.uiTextLog = new System.Windows.Forms.TextBox();
             this.dataGridViewState = new System.Windows.Forms.DataGridView();
             this.ColumnController = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnPollingFPS = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnDPadUp = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnDPadDown = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnDPadLeft = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -51,18 +53,21 @@
             this.ColumnLeftAnalogY = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnRightAnalogX = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnRightAnalogY = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.timerFPS = new System.Windows.Forms.Timer(this.components);
+            this.timerStateUpdate = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewState)).BeginInit();
             this.SuspendLayout();
             // 
             // uiTextLog
             // 
             this.uiTextLog.Cursor = System.Windows.Forms.Cursors.Default;
-            this.uiTextLog.Location = new System.Drawing.Point(9, 158);
+            this.uiTextLog.Location = new System.Drawing.Point(9, 198);
+            this.uiTextLog.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.uiTextLog.Multiline = true;
             this.uiTextLog.Name = "uiTextLog";
             this.uiTextLog.ReadOnly = true;
             this.uiTextLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.uiTextLog.Size = new System.Drawing.Size(1036, 242);
+            this.uiTextLog.Size = new System.Drawing.Size(1109, 302);
             this.uiTextLog.TabIndex = 0;
             this.uiTextLog.Text = "* Connect with DualShock to test *";
             // 
@@ -77,6 +82,7 @@
             this.dataGridViewState.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.dataGridViewState.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ColumnController,
+            this.ColumnPollingFPS,
             this.ColumnDPadUp,
             this.ColumnDPadDown,
             this.ColumnDPadLeft,
@@ -98,7 +104,8 @@
             this.ColumnRightAnalogX,
             this.ColumnRightAnalogY});
             this.dataGridViewState.GridColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.dataGridViewState.Location = new System.Drawing.Point(9, 12);
+            this.dataGridViewState.Location = new System.Drawing.Point(9, 15);
+            this.dataGridViewState.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.dataGridViewState.MultiSelect = false;
             this.dataGridViewState.Name = "dataGridViewState";
             this.dataGridViewState.ReadOnly = true;
@@ -108,7 +115,7 @@
             this.dataGridViewState.RowTemplate.Height = 23;
             this.dataGridViewState.RowTemplate.ReadOnly = true;
             this.dataGridViewState.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridViewState.Size = new System.Drawing.Size(1036, 134);
+            this.dataGridViewState.Size = new System.Drawing.Size(1109, 168);
             this.dataGridViewState.TabIndex = 1;
             this.dataGridViewState.SelectionChanged += new System.EventHandler(this.dataGridView_SelectionChanged);
             // 
@@ -121,6 +128,16 @@
             this.ColumnController.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.ColumnController.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.ColumnController.Width = 71;
+            // 
+            // ColumnPollingFPS
+            // 
+            this.ColumnPollingFPS.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.ColumnPollingFPS.HeaderText = "Polling FPS";
+            this.ColumnPollingFPS.Name = "ColumnPollingFPS";
+            this.ColumnPollingFPS.ReadOnly = true;
+            this.ColumnPollingFPS.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.ColumnPollingFPS.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.ColumnPollingFPS.Width = 71;
             // 
             // ColumnDPadUp
             // 
@@ -302,14 +319,25 @@
             this.ColumnRightAnalogY.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.ColumnRightAnalogY.Width = 60;
             // 
+            // timerFPS
+            // 
+            this.timerFPS.Interval = 1000;
+            this.timerFPS.Tick += new System.EventHandler(this.timerFPS_Tick);
+            // 
+            // timerStateUpdate
+            // 
+            this.timerStateUpdate.Interval = 50;
+            this.timerStateUpdate.Tick += new System.EventHandler(this.timerStateUpdate_Tick);
+            // 
             // FormTest
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1056, 412);
+            this.ClientSize = new System.Drawing.Size(1127, 515);
             this.Controls.Add(this.dataGridViewState);
             this.Controls.Add(this.uiTextLog);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormTest";
@@ -319,6 +347,7 @@
             this.Text = "Input Test";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormLog_FormClosing);
             this.Load += new System.EventHandler(this.FormLog_Load);
+            this.VisibleChanged += new System.EventHandler(this.FormTest_VisibleChanged);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewState)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -350,5 +379,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnLeftAnalogY;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnRightAnalogX;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnRightAnalogY;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnPollingFPS;
+        private System.Windows.Forms.Timer timerFPS;
+        private System.Windows.Forms.Timer timerStateUpdate;
     }
 }

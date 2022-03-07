@@ -26,7 +26,8 @@ namespace XI2DS
                     Application.Run(new FormMain());
                 }
                 catch (Exception e)
-                {                    
+                {
+                    Console.WriteLine("exception occurred: {0}", e.Message);
                     Application.Exit();
                 }
                 mutex.ReleaseMutex();
