@@ -118,9 +118,9 @@
             this.imageListBattery.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListBattery.ImageStream")));
             this.imageListBattery.TransparentColor = System.Drawing.Color.Transparent;
             this.imageListBattery.Images.SetKeyName(0, "battery_empty.png");
-            this.imageListBattery.Images.SetKeyName(1, "battery_full.png");
-            this.imageListBattery.Images.SetKeyName(2, "battery_low.png");
-            this.imageListBattery.Images.SetKeyName(3, "battery_mid.png");
+            this.imageListBattery.Images.SetKeyName(1, "battery_low.png");
+            this.imageListBattery.Images.SetKeyName(2, "battery_mid.png");
+            this.imageListBattery.Images.SetKeyName(3, "battery_full.png");
             this.imageListBattery.Images.SetKeyName(4, "battery_unknown.png");
             this.imageListBattery.Images.SetKeyName(5, "wired.png");
             // 
