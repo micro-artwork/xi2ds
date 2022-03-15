@@ -3,6 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using Nefarius.ViGEm.Client.Targets.DualShock4;
 using Vortice.XInput;
+using System.Diagnostics;
 
 namespace XI2DS
 {
@@ -113,10 +114,11 @@ namespace XI2DS
                 //sb.AppendFormat(analogFormat, "RY", rightThumbY);
                 sb.AppendFormat(format, "RTY");
             }
-            
+
             return sb.ToString();
 
         }
+
 
         public static float[] XInputStateToGridViewData(State state)
         {
@@ -148,6 +150,17 @@ namespace XI2DS
 
             return data;
 
+        }
+
+        public static bool XInputStatesDiff(State state1, State state2)
+        {
+            return state1.Gamepad.Buttons != state2.Gamepad.Buttons ||
+            state1.Gamepad.LeftThumbX != state2.Gamepad.LeftThumbX ||
+            state1.Gamepad.RightThumbX != state2.Gamepad.RightThumbX ||
+            state1.Gamepad.LeftThumbY != state2.Gamepad.LeftThumbY ||
+            state1.Gamepad.RightThumbY != state2.Gamepad.RightThumbY ||
+            state1.Gamepad.LeftTrigger != state2.Gamepad.LeftTrigger ||
+            state1.Gamepad.RightTrigger != state2.Gamepad.RightTrigger;
         }
 
     }

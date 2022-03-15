@@ -40,22 +40,17 @@ namespace XI2DS.DualShock4
 
 
         public IDualShock4Controller Controller { get; }
-              
+
 
         public int UserIndex { get; }
 
         public bool IsConnected = false;
 
         IFeedBackReceiver feedBackReceiver;
-        
+
         public DS4Controller(ViGEmClient client, int userIndex, IFeedBackReceiver feedBackReceiver)
         {
-            if (userIndex >= 4 && userIndex < 0)
-            {
-                throw new Exception("Not allowed user index type");
-            }
-
-            this.UserIndex = UserIndex;
+            this.UserIndex = userIndex;
             this.Controller = client.CreateDualShock4Controller();
             SetFeedBackReceiver(feedBackReceiver);
         }
@@ -99,20 +94,21 @@ namespace XI2DS.DualShock4
             {
                 Gamepad gamepad = state.Gamepad;
                 GamepadButtons buttons = gamepad.Buttons;
-                
+
                 foreach (KeyValuePair<GamepadButtons, DualShock4Button> item in ButtonFlags)
                 {
                     Controller.SetButtonState(item.Value, buttons.HasFlag(item.Key));
                 }
 
                 // combination for special button implementation                       
-                if (buttons.HasFlag(GamepadButtons.Back)) {
-                                        
+                if (buttons.HasFlag(GamepadButtons.Back))
+                {
+
                     if (buttons.HasFlag(GamepadButtons.Start))
                     {
                         Controller.SetButtonState(DualShock4SpecialButton.Ps, true);
                         Controller.SetButtonState(DualShock4SpecialButton.Options, false);
-                    } 
+                    }
                     else if (buttons.HasFlag(GamepadButtons.LeftShoulder))
                     {
                         Controller.SetButtonState(DualShock4SpecialButton.Share, true);
@@ -122,14 +118,16 @@ namespace XI2DS.DualShock4
                     {
                         Controller.SetButtonState(DualShock4SpecialButton.Touchpad, true);
                         Controller.SetButtonState(DualShock4Button.ShoulderRight, false);
-                    } else
+                    }
+                    else
                     {
                         Controller.SetButtonState(DualShock4SpecialButton.Ps, false);
                         Controller.SetButtonState(DualShock4SpecialButton.Share, false);
                         Controller.SetButtonState(DualShock4SpecialButton.Touchpad, false);
                     }
 
-                } else
+                }
+                else
                 {
                     Controller.SetButtonState(DualShock4SpecialButton.Ps, false);
                     Controller.SetButtonState(DualShock4SpecialButton.Share, false);
@@ -145,7 +143,7 @@ namespace XI2DS.DualShock4
                         Controller.SetDPadDirection(item.Value);
                     }
                 }
-                
+
                 if (buttons.HasFlag(GamepadButtons.DPadUp) && buttons.HasFlag(GamepadButtons.DPadLeft))
                 {
                     Controller.SetDPadDirection(DualShock4DPadDirection.Northwest);
@@ -174,10 +172,10 @@ namespace XI2DS.DualShock4
                 Controller.SetAxisValue(DualShock4Axis.RightThumbY, (byte)(rty + 0x7f));
 
                 Controller.SetButtonState(DualShock4Button.TriggerLeft, gamepad.LeftTrigger > Gamepad.TriggerThreshold);
-                Controller.SetSliderValue(DualShock4Slider.LeftTrigger, gamepad.LeftTrigger);                
+                Controller.SetSliderValue(DualShock4Slider.LeftTrigger, gamepad.LeftTrigger);
                 Controller.SetButtonState(DualShock4Button.TriggerRight, gamepad.RightTrigger > Gamepad.TriggerThreshold);
-                Controller.SetSliderValue(DualShock4Slider.RightTrigger, gamepad.RightTrigger);                
-     
+                Controller.SetSliderValue(DualShock4Slider.RightTrigger, gamepad.RightTrigger);
+
                 this.Controller.SubmitReport();
 
             }

@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.uiTextLog = new System.Windows.Forms.TextBox();
             this.dataGridViewState = new System.Windows.Forms.DataGridView();
             this.ColumnController = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnDPadUp = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -53,18 +52,6 @@
             this.ColumnRightAnalogY = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewState)).BeginInit();
             this.SuspendLayout();
-            // 
-            // uiTextLog
-            // 
-            this.uiTextLog.Cursor = System.Windows.Forms.Cursors.Default;
-            this.uiTextLog.Location = new System.Drawing.Point(9, 158);
-            this.uiTextLog.Multiline = true;
-            this.uiTextLog.Name = "uiTextLog";
-            this.uiTextLog.ReadOnly = true;
-            this.uiTextLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.uiTextLog.Size = new System.Drawing.Size(1036, 242);
-            this.uiTextLog.TabIndex = 0;
-            this.uiTextLog.Text = "* Connect with DualShock to test *";
             // 
             // dataGridViewState
             // 
@@ -98,7 +85,8 @@
             this.ColumnRightAnalogX,
             this.ColumnRightAnalogY});
             this.dataGridViewState.GridColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.dataGridViewState.Location = new System.Drawing.Point(9, 12);
+            this.dataGridViewState.Location = new System.Drawing.Point(12, 12);
+            this.dataGridViewState.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.dataGridViewState.MultiSelect = false;
             this.dataGridViewState.Name = "dataGridViewState";
             this.dataGridViewState.ReadOnly = true;
@@ -108,7 +96,7 @@
             this.dataGridViewState.RowTemplate.Height = 23;
             this.dataGridViewState.RowTemplate.ReadOnly = true;
             this.dataGridViewState.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridViewState.Size = new System.Drawing.Size(1036, 134);
+            this.dataGridViewState.Size = new System.Drawing.Size(1036, 160);
             this.dataGridViewState.TabIndex = 1;
             this.dataGridViewState.SelectionChanged += new System.EventHandler(this.dataGridView_SelectionChanged);
             // 
@@ -304,12 +292,12 @@
             // 
             // FormTest
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1056, 412);
+            this.ClientSize = new System.Drawing.Size(1060, 185);
             this.Controls.Add(this.dataGridViewState);
-            this.Controls.Add(this.uiTextLog);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormTest";
@@ -317,17 +305,13 @@
             this.ShowInTaskbar = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Input Test";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormLog_FormClosing);
-            this.Load += new System.EventHandler(this.FormLog_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormTest_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewState)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.TextBox uiTextLog;
         private System.Windows.Forms.DataGridView dataGridViewState;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnController;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnDPadUp;
