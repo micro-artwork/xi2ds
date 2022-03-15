@@ -11,15 +11,15 @@ using System.Reflection;
 
 namespace XI2DS
 {
-    public partial class FormMain : Form, IXInputEventReceiver, IFeedBackReceiver
+    public partial class FormMain : Form, IFeedBackReceiver
     {
         readonly ViGEmClient client;
-        readonly XInputController[] xInputControllers;
+        readonly XInputController xInputController;
         readonly DS4Controller[] ds4Controllers;
         readonly Button[] connectionButtons;
         readonly PictureBox[] batteryIndicators;
         readonly PictureBox[] connectionIndicators;
-        readonly FormTest formTest = new FormTest();
+        readonly FormTest formTest;
 
         public FormMain()
         {
@@ -40,13 +40,6 @@ namespace XI2DS
             connectionIndicators = new[] {
                uiImageConnectionController1, uiImageConnectionController2,
                uiImageConnectionController3, uiImageConnectionController4
-            };
-
-            xInputControllers = new[] {
-                new XInputController(0, this),
-                new XInputController(1, this),
-                new XInputController(2, this),
-                new XInputController(3, this)
             };
 
             notifyIcon.ContextMenuStrip = new ContextMenuStrip();
@@ -78,28 +71,61 @@ namespace XI2DS
             }
             catch (VigemBusNotFoundException e)
             {
-                if (MessageBox.Show("ViGEm bus driver is not found. Please check to install driver. " +
+                if (MessageBox.Show("Cannot find ViGEm bus driver. Please check to install driver. " +
                     "Press OK button to go to driver download page.",
                     "Driver Not Found",
                     MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.OK)
                 {
-                    try
-                    {
-                        Process process = new Process();
-                        process.StartInfo.UseShellExecute = true;
-                        process.StartInfo.FileName = "https://github.com/ViGEm/ViGEmBus/releases";
-                        process.Start();
-                    }
-                    catch
-                    {
-                        throw;
-                    }
+                    Process process = new Process();
+                    process.StartInfo.UseShellExecute = true;
+                    process.StartInfo.FileName = "https://github.com/ViGEm/ViGEmBus/releases";
+                    process.Start();
                 }
-                throw e;
+                throw;
+            }
+
+            xInputController = new XInputController();
+            xInputController.StateUpdated += XInputController_StateUpdated;
+            xInputController.StatusUpdated += XInputController_StatusUpdated;
+
+            formTest = new FormTest(xInputController);
+
+            xInputController.StartScan();
+
+        }
+
+        private void XInputController_StatusUpdated(object sender, XInputStatusEventArgs e)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke((MethodInvoker)delegate
+                {
+                    if (e.Status.IsConnected)
+                    {
+                        connectionButtons[e.UserIndex].Enabled = true;
+                    }
+                    else
+                    {
+                        connectionButtons[e.UserIndex].Text = "DS4 Connect";
+                        connectionButtons[e.UserIndex].Enabled = false;
+                        ds4Controllers[e.UserIndex].Disconnect();
+                    }
+                    batteryIndicators[e.UserIndex].Image = GetBatteryImage(e.Status.BatteryInfo.BatteryType, e.Status.BatteryInfo.BatteryLevel);
+                    connectionIndicators[e.UserIndex].Image = GetConnectionImage(e.Status.IsConnected);
+                });
             }
         }
 
-        public string AssemblyTitle
+        private void XInputController_StateUpdated(object sender, XInputStateEventArgs e)
+        {
+            if (ds4Controllers[e.UserIndex].IsConnected)
+            {
+                ds4Controllers[e.UserIndex].SubmitReport(e.State);
+            }
+        }
+
+
+        private string AssemblyTitle
         {
             get
             {
@@ -116,7 +142,7 @@ namespace XI2DS
             }
         }
 
-        public string AssemblyVersion
+        private string AssemblyVersion
         {
             get
             {
@@ -124,9 +150,11 @@ namespace XI2DS
             }
         }
 
+
         private Image GetBatteryImage(BatteryType type, BatteryLevel level)
         {
             int index;
+
             switch (type)
             {
                 case BatteryType.Alkaline:
@@ -143,6 +171,7 @@ namespace XI2DS
                     index = 4;
                     break;
             }
+
             return imageListBattery.Images[index];
         }
 
@@ -171,11 +200,7 @@ namespace XI2DS
                 controller.Disconnect();
             }
 
-            foreach (XInputController controller in xInputControllers)
-            {
-                controller.StopScan();
-            }
-
+            xInputController.StopScan();
             client.Dispose();
 
             Application.ExitThread();
@@ -185,19 +210,17 @@ namespace XI2DS
 
         private void ButtonConnect_Click(object sender, EventArgs e)
         {
-            Button button = (Button)sender;
+            Button button = sender as Button;
             int userIndex = Convert.ToInt32(button.Tag);
 
             if (ds4Controllers[userIndex].IsConnected)
             {
-                xInputControllers[userIndex].StopReport();
                 ds4Controllers[userIndex].Disconnect();
                 connectionButtons[userIndex].Text = "DS4 Connect";
             }
             else
             {
                 ds4Controllers[userIndex].Connect();
-                xInputControllers[userIndex].StartReport();
                 connectionButtons[userIndex].Text = "DS4 Disconnect";
             }
         }
@@ -210,41 +233,7 @@ namespace XI2DS
 
         public void OnFeedBackReceived(int userIndex, byte smallMotor, byte largeMotor)
         {
-            //Debug.WriteLine("{0}, {1}, {2}", userIndex, smallMotor, largeMotor);
-            xInputControllers[userIndex].Vibrate(smallMotor, largeMotor);
-        }
-
-        public void OnStatusUpdated(int userIndex, bool isConnected, BatteryInformation information)
-        {
-            //Debug.WriteLine("{0}, {1}, {2}, {3}", userIndex, isConnected, information.BatteryType, information.BatteryLevel);
-            if (this.InvokeRequired)
-            {
-                this.Invoke((MethodInvoker)delegate
-                {
-                    if (isConnected)
-                    {
-                        connectionButtons[userIndex].Enabled = true;
-                    }
-                    else
-                    {
-                        connectionButtons[userIndex].Text = "DS4 Connect";
-                        connectionButtons[userIndex].Enabled = false;
-                        ds4Controllers[userIndex].Disconnect();
-                    }
-                    batteryIndicators[userIndex].Image = GetBatteryImage(information.BatteryType, information.BatteryLevel);
-                    connectionIndicators[userIndex].Image = GetConnectionImage(isConnected);
-                });
-            }
-
-        }
-
-        public void OnStateUpdated(int userIndex, State state)
-        {
-            ds4Controllers[userIndex].SubmitReport(state);
-            if (formTest.Visible)
-            {
-                formTest.ShowState(userIndex, state);
-            }
+            xInputController.Vibrate(userIndex, smallMotor, largeMotor);
         }
 
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e)

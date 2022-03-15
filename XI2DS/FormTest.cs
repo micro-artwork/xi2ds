@@ -1,67 +1,59 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Diagnostics;
 using Vortice.XInput;
+using XI2DS.Xinput;
 
 namespace XI2DS
 {
     public partial class FormTest : Form
     {
-        private State[] stateArray;
-        private bool formLoaded = false;
+        private readonly struct InputState
+        {
+            public readonly State state;
+            public readonly bool updated;
 
-        public FormTest()
+            public InputState(bool updated, State? state = null)
+            {
+                if (state == null)
+                {
+                    this.state = new State();
+                }
+                else
+                {
+                    this.state = (State)state;
+                }
+                this.updated = updated;
+            }
+        }
+
+        private readonly InputState[] inputStates = new[] { new InputState(false), new InputState(false), new InputState(false), new InputState(false) };
+
+        public FormTest(XInputController controller)
         {
             InitializeComponent();
 
-            stateArray = new[]
-            {
-                new State(), new State(), new State(), new State()
-            };
-
-            //dataGridViewXInput.Rows.Add(4);
             for (int rowIndex = 0; rowIndex < 4; rowIndex++)
             {
                 dataGridViewState.Rows.Add();
                 dataGridViewState.Rows[rowIndex].Cells[0].Value = string.Format("{0}", rowIndex + 1);
             }
 
-            //dataGridViewState.RowsDefaultCellStyle.SelectionBackColor = System.Drawing.Color.Transparent;
+            controller.StateUpdated += Controller_StateUpdated;
         }
 
-        private void FormLog_Load(object sender, EventArgs e)
+        private void Controller_StateUpdated(object sender, XInputStateEventArgs e)
         {
-            formLoaded = true;
-        }
+            bool updated = Utils.XInputStatesDiff(inputStates[e.UserIndex].state, e.State);
+            inputStates[e.UserIndex] = new InputState(updated, e.State);
 
-        public void ShowState(int userIndex, State state)
-        {
-            if (formLoaded)
+            if (updated)
             {
-                var oldState = stateArray[userIndex];
-                state.PacketNumber = 0;
-
-                if (this.InvokeRequired)
-                {
-                    this.Invoke((MethodInvoker)delegate
-                    {
-                        var stateStr = Utils.XInputStateToText(state);
-                        if (stateStr != "")
-                        {
-                            var log = string.Format("Controller {0} - {1}" + Environment.NewLine, userIndex + 1, stateStr);
-                            this.uiTextLog.AppendText(log);
-                        }
-
-                        var data = Utils.XInputStateToGridViewData(state);
-                        UpdateGridViewData(userIndex, data);
-                    });
-                }
-
-                stateArray[userIndex] = state;
-
+                var data = Utils.XInputStateToGridViewData(e.State);
+                UpdateGridViewData(e.UserIndex, data);
             }
         }
-
 
         private void UpdateGridViewData(int rowIndex, float[] data)
         {
@@ -77,10 +69,9 @@ namespace XI2DS
                     dataGridViewState.Rows[rowIndex].Cells[columnIndex + 1].Style.BackColor = Color.White;
                 }
             }
-
         }
 
-        private void FormLog_FormClosing(object sender, FormClosingEventArgs e)
+        private void FormTest_FormClosing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = true;
             this.Hide();
