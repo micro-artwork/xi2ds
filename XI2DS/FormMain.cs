@@ -25,7 +25,7 @@ namespace XI2DS
         {
             InitializeComponent();
 
-            this.Text = String.Format("{0} v{1}", AssemblyTitle, AssemblyVersion);
+            this.Text = String.Format("{0} v{1}", AssemblyTitle, AssemblyInformationalVersion);
 
             connectionButtons = new[] {
                 uiButtonConnectController1, uiButtonConnectController2,
@@ -124,32 +124,22 @@ namespace XI2DS
             }
         }
 
-
         private string AssemblyTitle
         {
             get
             {
-                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
-                if (attributes.Length > 0)
-                {
-                    AssemblyTitleAttribute titleAttribute = (AssemblyTitleAttribute)attributes[0];
-                    if (titleAttribute.Title != "")
-                    {
-                        return titleAttribute.Title;
-                    }
-                }
-                return "";
+                return Assembly.GetEntryAssembly().GetName().Name;
             }
         }
 
-        private string AssemblyVersion
+        private string AssemblyInformationalVersion
         {
             get
             {
-                return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                return Assembly.GetExecutingAssembly()
+                    .GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
             }
         }
-
 
         private Image GetBatteryImage(BatteryType type, BatteryLevel level)
         {

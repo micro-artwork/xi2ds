@@ -16,7 +16,7 @@ namespace XI2DS
         {
             InitializeComponent();
 
-            this.Text = String.Format("{0} {1}", AssemblyTitle, AssemblyVersion);
+            this.Text = String.Format("{0} {1} ({2})", AssemblyTitle, AssemblyInformationalVersion, AssemblyVersion);
             this.richTextBoxDescription.Rtf = Properties.Resources.About;
 
             /*
@@ -39,7 +39,7 @@ namespace XI2DS
         {
             //Process.Start(e.LinkText);
             try
-            {                
+            {
                 Process process = new Process();
                 process.StartInfo.UseShellExecute = true;
                 process.StartInfo.FileName = e.LinkText;
@@ -70,11 +70,20 @@ namespace XI2DS
             }
         }
 
-        public string AssemblyVersion
+        private string AssemblyVersion
         {
             get
             {
-                return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                return Assembly.GetEntryAssembly().GetName().Version.ToString();
+            }
+        }
+
+        private string AssemblyInformationalVersion
+        {
+            get
+            {
+                return Assembly.GetExecutingAssembly()
+                    .GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
             }
         }
 
@@ -135,7 +144,7 @@ namespace XI2DS
 
         private void RichTextBox_HideCaret(object sender, MouseEventArgs e)
         {
-
+            // do nothing
         }
     }
 }

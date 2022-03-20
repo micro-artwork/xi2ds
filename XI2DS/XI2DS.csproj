@@ -1,69 +1,70 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-   <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <RootNamespace>XI2DS</RootNamespace>
-    <AssemblyName>XI2DS</AssemblyName>
-    <ApplicationIcon>xi2ds.ico</ApplicationIcon>
-    <RepositoryUrl>https://github.com/micro-artwork/xi2ds</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/micro-artwork/xi2ds</PackageProjectUrl>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DefineConstants>TRACE</DefineConstants>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net5.0-windows</TargetFramework>
+		<UseWindowsForms>true</UseWindowsForms>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<RootNamespace>XI2DS</RootNamespace>
+		<AssemblyName>XI2DS</AssemblyName>
+		<ApplicationIcon>xi2ds.ico</ApplicationIcon>
+		<RepositoryUrl>https://github.com/micro-artwork/xi2ds</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/micro-artwork/xi2ds</PackageProjectUrl>
+		<Deterministic>false</Deterministic>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<DefineConstants>TRACE</DefineConstants>
+		<PlatformTarget>AnyCPU</PlatformTarget>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\about.rtf" />
-    <None Include="Resources\controller_connected.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\controller_not_connected.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\wired.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\battery_empty.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\battery_full.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\battery_low.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\battery_mid.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\battery_unknown.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Nefarius.ViGEm.Client" Version="1.17.178" />
-    <PackageReference Include="Vortice.XInput" Version="2.1.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Properties\Settings.Designer.cs">
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <!-- <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" /> -->
+	<ItemGroup>
+		<None Include="App.config" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="Resources\about.rtf" />
+		<None Include="Resources\controller_connected.png" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="Resources\controller_not_connected.png" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="Resources\wired.png" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="Resources\battery_empty.png" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="Resources\battery_full.png" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="Resources\battery_low.png" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="Resources\battery_mid.png" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="Resources\battery_unknown.png" />
+	</ItemGroup>
+	<ItemGroup>
+		<WCFMetadata Include="Connected Services\" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Nefarius.ViGEm.Client" Version="1.17.178" />
+		<PackageReference Include="Vortice.XInput" Version="2.1.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Update="Properties\Settings.Designer.cs">
+			<DesignTimeSharedInput>True</DesignTimeSharedInput>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Settings.settings</DependentUpon>
+		</Compile>
+	</ItemGroup>
+	<ItemGroup>
+		<None Update="Properties\Settings.settings">
+			<Generator>SettingsSingleFileGenerator</Generator>
+			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
+		</None>
+	</ItemGroup>
+	<!-- <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" /> -->
 </Project>
 
