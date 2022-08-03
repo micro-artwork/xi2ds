@@ -15,18 +15,18 @@ namespace XI2DS
         [STAThread]
         static void Main()
         {
-            bool excutable;            
+            bool excutable;
             Mutex mutex = new Mutex(true, "XI2DS", out excutable);
             if (excutable)
-            {                
+            {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 try
                 {
                     Application.Run(new FormMain());
                 }
-                catch (Exception e)
-                {                    
+                catch
+                {
                     Application.Exit();
                 }
                 mutex.ReleaseMutex();
