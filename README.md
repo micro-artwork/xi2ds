@@ -1,5 +1,5 @@
 
-![icon](https://micro-artwork.github.io/images/projects/xi2ds/icon.png)
+![icon](https://micro-artwork.github.io/projects/xi2ds/icon.png)
 
 > **Note**
 > 
@@ -54,25 +54,25 @@ It is very simple to use!
 
 2. Download and excute XI2DS
 
-![](https://micro-artwork.github.io/images/projects/xi2ds/xi2ds_1.png)
+![](https://micro-artwork.github.io/projects/xi2ds/xi2ds_1.png)
 
 3. Connect a controller
 
-![](https://micro-artwork.github.io/images/projects/xi2ds/xi2ds_3.png)
+![](https://micro-artwork.github.io/projects/xi2ds/xi2ds_3.png)
 
 4. Click 'DS4 Connect' Button
 
-![](https://micro-artwork.github.io/images/projects/xi2ds/xi2ds_4.png)
+![](https://micro-artwork.github.io/projects/xi2ds/xi2ds_4.png)
 
 5. Play
 
 When click close button on application, go to tray without termination. If want termination completely, use Exit on menu.
 
-![](https://micro-artwork.github.io/images/projects/xi2ds/xi2ds_6.png)
+![](https://micro-artwork.github.io/projects/xi2ds/xi2ds_6.png)
 
 ## Demo
 
-![](https://micro-artwork.github.io/images/projects/xi2ds/demo.gif)
+![](https://micro-artwork.github.io/projects/xi2ds/demo.gif)
 
 https://youtu.be/bRIGUEyhO0w
 
